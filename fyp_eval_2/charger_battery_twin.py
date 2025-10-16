@@ -86,7 +86,7 @@ class BatteryParams:
     # Charger limits — class-typical for 400 V SUVs (India market)
     max_charge_power_W: float = 60000.0  # 60 kW DC fast (peak)
     max_discharge_power_W: float = 50000.0  # regen/V2G ceiling (conservative)
-    max_c_rate: float = 1.0              # <= 1C at cool temps keeps thermal sane
+    max_c_rate: float = 0.5         # <= 1C at cool temps keeps thermal sane
 
 
 @dataclass
@@ -437,8 +437,10 @@ class EVChargerTwin:
 
 def demo(sim_s: float = 86400.0, dt_s: float = 1.0, mode_schedule: Optional[List[Tuple[float, str]]] = None,
          plot: bool = False, use_controller: bool = True, csv_path: Optional[str] = None,
-         show_progress: Optional[bool] = None) -> EVChargerTwin:
-    twin = EVChargerTwin(use_controller=use_controller)
+         show_progress: Optional[bool] = None,
+         bp: Optional[BatteryParams] = None,
+         cp: Optional[ChargerParams] = None) -> EVChargerTwin:
+    twin = EVChargerTwin(bp=bp or BatteryParams(), cp=cp or ChargerParams(), use_controller=use_controller)
     # Example: start charging, then pause, then discharge for a bit if enabled
     schedule = mode_schedule or [
         (0.0, "charge"),
@@ -536,7 +538,7 @@ if __name__ == "__main__":
 
     twin = demo(sim_s=total_s, dt_s=args.dt, mode_schedule=mode_schedule,
                 plot=args.plot, use_controller=(not args.no_controller), csv_path=args.csv,
-                show_progress=(not args.no_progress))
+                show_progress=(not args.no_progress), bp=bp, cp=cp)
 
     # Summary print
     last = {k: v[-1] for k, v in twin.history.items() if len(v)}

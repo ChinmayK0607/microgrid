@@ -70,7 +70,7 @@ class BatteryParams:
     # Aging (very simplified; coefficients tuned for demonstration only)
     cal_k_ref_per_s: float = 1e-11       # calendar fade rate at 25C
     cyc_k_ref: float = 1e-5              # cycle fade rate per (C-rate^alpha)
-    alpha_cyc: float = 0.5              # C-rate exponent
+    alpha_cyc: float = 0.7           # C-rate exponent
     arrhenius_Ea_cal_J: float = 2.5e4    # activation energy calendar aging
     arrhenius_Ea_cyc_J: float = 2.0e4
 
